@@ -3,7 +3,7 @@ const admin = require("firebase-admin");
 const axios = require("axios");
 const serviceAccount = require("./serviceAccount.json");
 
-// Khởi tạo Firebase
+// Khoi tao Firebase
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://adr-8poll-default-rtdb.firebaseio.com"
@@ -11,42 +11,37 @@ admin.initializeApp({
 
 const db = admin.database();
 const bot = new Telegraf('8419760931:AAFwUzvEaDbobW61aBPahPrcfY164pVY2bU');
-const API_LINK4M = "68d3ec91f1e47945eb523749"; 
+
+// Dung API Moi Nhat 68d53e...
+const API_LINK4M = "68d53ecac8e8b304247bdb2d"; 
 const MY_WEB = "https://lenguyen1933374.github.io/getkey/"; 
 
-// Lệnh /getkey đồng nhất
 bot.command('getkey', async (ctx) => {
   try {
-    // Tạo Key sạch không dấu gạch ngang
-    const newKey = "NGUYENMOD" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const newKey = "MOD" + Math.random().toString(36).substring(2, 7).toUpperCase();
     
+    // Luu database
     await db.ref("Free_Keys/" + newKey).set({
-      status: "unused", 
-      type: "24h", 
-      hwid: "", 
+      status: "unused",
+      type: "24h",
       created_at: Date.now()
     });
 
-    const destination = MY_WEB + "?key=" + newKey;
-    const response = await axios.get("https://link4m.co/api-token?api=" + API_LINK4M + "&url=" + destination);
-    
-    if (response.data && response.data.shortenedUrl) {
-      const shortUrl = response.data.shortenedUrl;
-      // Gửi văn bản thuần, link sẽ tự động xanh lè trên Telegram
-      await ctx.reply("Mã Key 24H của mày đã sẵn sàng!\n\n👉 Link vượt để lấy key:\n" + shortUrl);
-    } else {
-      ctx.reply("Lỗi: Link4M không trả về link. Kiểm tra lại API Key Link4M của mày!");
-    }
+    // Goi Link4M
+    const destination = `${MY_WEB}?key=${newKey}`;
+    const apiUrl = `https://link4m.co/api-token?api=${API_LINK4M}&url=${destination}`;
+    const response = await axios.get(apiUrl);
 
+    if (response.data && response.data.shortenedUrl) {
+      await ctx.reply("✅ KEY CỦA MÀY ĐÃ SẴN SÀNG:\n\n" + response.data.shortenedUrl);
+    } else {
+      ctx.reply("Link4M bao loi: " + (response.data.message || "Sai API Token"));
+    }
   } catch (e) {
-    console.log("Lỗi: ", e);
-    ctx.reply("Hệ thống bận, lỗi kết nối rồi mày ơi!");
+    ctx.reply("Bot loi ket noi roi!");
   }
 });
 
 bot.launch().then(() => {
-  console.log("-----------------------------------------");
-  console.log("Bot NguyenMod đang hoạt động rực rỡ...");
-  console.log("Dùng lệnh /getkey để test nhé!");
-  console.log("-----------------------------------------");
+  console.log("DA CHAY VOI API: " + API_LINK4M);
 });
