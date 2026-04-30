@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NguyenMod Key System</title>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #1e1e1e; padding: 30px; border-radius: 20px; border: 1px solid #333; text-align: center; width: 85%; max-width: 350px; }
+        h2 { color: #00ff88; margin-bottom: 10px; }
+        #keyShow { font-size: 24px; font-weight: bold; color: #ff3e3e; background: #252525; padding: 15px; border-radius: 10px; border: 2px dashed #555; margin: 20px 0; min-height: 40px; }
+        .btn { background: #00ff88; color: black; border: none; padding: 15px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>KEY CỦA BẠN</h2>
+        <p>Hạn dùng: 24 Giờ</p>
+        <div id="keyShow">ĐANG TẢI...</div>
+        <button class="btn" onclick="copy()">BẤM ĐỂ SAO CHÉP</button>
+    </div>
+    <script>
+        const key = new URLSearchParams(window.location.search).get('key');
+        if(key) document.getElementById('keyShow').innerText = key;
+        function copy() {
+            if(!key) return;
+            navigator.clipboard.writeText(key);
+            alert("Đã sao chép mã thành công!");
+        }
+    </script>
+</body>
+</html>
